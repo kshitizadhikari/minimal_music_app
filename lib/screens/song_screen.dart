@@ -7,14 +7,20 @@ import 'package:provider/provider.dart';
 class SongScreen extends StatelessWidget {
   const SongScreen({super.key});
 
+  //convert duration into min:sec
+  String formatTime(Duration duration) {
+    String twoDigitSeconds =
+        duration.inSeconds.remainder(60).toString().padLeft(2, '0');
+    String formattedTime = "${duration.inMinutes}:$twoDigitSeconds";
+    return formattedTime;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<PlaylistProvider>(
       builder: (context, value, child) {
-
         //get the playlist
         final playlist = value.playlist;
-
 
         //get the current song
         final currentSong = playlist[value.currentSongIndex ?? 0];
@@ -54,8 +60,7 @@ class SongScreen extends StatelessWidget {
                       children: [
                         ClipRRect(
                           borderRadius: BorderRadius.circular(12),
-                          child: Image.asset(
-                              currentSong.albumArtImagePath),
+                          child: Image.asset(currentSong.albumArtImagePath),
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -99,7 +104,7 @@ class SongScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             //start time
-                            Text("1:11"),
+                            Text(formatTime(value.currentDuration)),
 
                             //shuffle icon
                             Icon(Icons.shuffle),
@@ -108,7 +113,7 @@ class SongScreen extends StatelessWidget {
                             Icon(Icons.repeat),
 
                             //end time
-                            Text("3:44"),
+                            Text(formatTime(value.totalDuration)),
                           ],
                         ),
                         SliderTheme(
@@ -117,11 +122,18 @@ class SongScreen extends StatelessWidget {
                                 enabledThumbRadius: 5),
                           ),
                           child: Slider(
-                              value: 50,
-                              min: 0,
-                              max: 100,
-                              activeColor: Colors.green,
-                              onChanged: (value) {}),
+                            value: value.currentDuration.inSeconds.toDouble(),
+                            min: 0,
+                            max: value.totalDuration.inSeconds.toDouble(),
+                            activeColor: Colors.green,
+                            onChanged: (double double) {
+                              //when the user is sliding the slider
+                            },
+                            onChangeEnd: (double double) {
+                              //sliding has finished.. go to that specific position of the song
+                              value.seek(Duration(seconds: double.toInt()));
+                            },
+                          ),
                         ),
                       ],
                     ),
@@ -132,7 +144,7 @@ class SongScreen extends StatelessWidget {
                       //skip previous
                       Expanded(
                         child: GestureDetector(
-                          onTap: () {},
+                          onTap: value.playPrevious,
                           child: NeuBox(
                             child: Icon(Icons.skip_previous),
                           ),
@@ -146,9 +158,11 @@ class SongScreen extends StatelessWidget {
                       Expanded(
                         flex: 2,
                         child: GestureDetector(
-                          onTap: () {},
+                          onTap: value.pauseOrResume,
                           child: NeuBox(
-                            child: Icon(Icons.play_arrow),
+                            child: Icon(value.isPlaying
+                                ? Icons.pause
+                                : Icons.play_arrow),
                           ),
                         ),
                       ),
@@ -159,7 +173,7 @@ class SongScreen extends StatelessWidget {
                       //skip forward
                       Expanded(
                         child: GestureDetector(
-                          onTap: () {},
+                          onTap: value.playNext,
                           child: NeuBox(
                             child: Icon(Icons.skip_next),
                           ),
