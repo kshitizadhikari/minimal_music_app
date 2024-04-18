@@ -107,7 +107,9 @@ class SongScreen extends StatelessWidget {
                             Text(formatTime(value.currentDuration)),
 
                             //shuffle icon
-                            Icon(Icons.shuffle),
+                            IconButton(onPressed: () {
+                              value.shuffle();
+                            }, icon: Icon(Icons.shuffle)),
 
                             //repeat icon
                             Icon(Icons.repeat),

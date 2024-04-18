@@ -40,7 +40,12 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
-        title: Text('P L A Y L I S T'),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Text('MusicVerse'),
+          ],
+        ),
       ),
       drawer: MyDrawer(),
       body: Consumer<PlaylistProvider>(builder: (context, value, child) {

@@ -1,6 +1,7 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:minimal_music_app/models/song.dart';
+import 'dart:math';
 
 class PlaylistProvider extends ChangeNotifier {
   final List<Song> _playlist = [
@@ -22,6 +23,8 @@ class PlaylistProvider extends ChangeNotifier {
         audioPath: "music/Luke Sital Singh-Benediction.mp3")
   ];
 
+
+  Random random = new Random();
   //current song playing index
   int? _currentSongIndex;
   //G E T T E R S
@@ -82,6 +85,20 @@ class PlaylistProvider extends ChangeNotifier {
   // seek to a specific point int a song
   void seek(Duration position) async {
     await _audioPlayer.seek(position);
+  }
+
+  // shuffle the songs
+  void shuffle() async {
+    int randomIndex = random.nextInt(_playlist.length);
+    while(randomIndex == _currentSongIndex) {
+      int randomIndex = random.nextInt(_playlist.length);
+    }
+    _currentSongIndex = randomIndex;
+    final String path = _playlist[currentSongIndex!].audioPath;
+    await _audioPlayer.stop(); // stop the current song
+    await _audioPlayer.play(AssetSource(path));
+    _isPlaying = true;
+    notifyListeners();
   }
 
   // play next song
