@@ -10,27 +10,31 @@ class PlaylistProvider extends ChangeNotifier {
         songName: "Like We Used To",
         artistName: "A Rocket to the Moon",
         albumArtImagePath: "assets/images/a_rocket_to_the_moon.jpg",
-        audioPath: "music/A Rocket To The Moon-Like We Used To.wma"),
+        audioPath: "music/A Rocket To The Moon-Like We Used To.wma",
+    ),
     Song(
         songName: "It's Time",
         artistName: "Imagine Dragons",
         albumArtImagePath: "assets/images/imagine_dragons.jpg",
-        audioPath: "music/Imagine Dragons-It's Time.mp3"),
+        audioPath: "music/Imagine Dragons-It's Time.mp3",
+    ),
     Song(
         songName: "Benediction",
         artistName: "Luke Sital Singh",
         albumArtImagePath: "assets/images/luke_sital_singh.jpg",
-        audioPath: "music/Luke Sital Singh-Benediction.mp3")
+        audioPath: "music/Luke Sital Singh-Benediction.mp3",
+    )
   ];
 
 
-  Random random = new Random();
+  Random random = Random();
   //current song playing index
   int? _currentSongIndex;
   //G E T T E R S
   List<Song> get playlist => _playlist;
   int? get currentSongIndex => _currentSongIndex;
   bool get isPlaying => _isPlaying;
+  bool get isLoopOn => _isLoopOn;
   Duration get totalDuration => _totalDuration;
   Duration get currentDuration => _currentDuration;
 
@@ -48,6 +52,9 @@ class PlaylistProvider extends ChangeNotifier {
 
   // initially not playing
   bool _isPlaying = false;
+
+  // initially not shuffled
+  bool _isLoopOn = false;
 
   // play the song
   void play() async {
@@ -93,11 +100,37 @@ class PlaylistProvider extends ChangeNotifier {
     while(randomIndex == _currentSongIndex) {
       int randomIndex = random.nextInt(_playlist.length);
     }
+
     _currentSongIndex = randomIndex;
     final String path = _playlist[currentSongIndex!].audioPath;
     await _audioPlayer.stop(); // stop the current song
     await _audioPlayer.play(AssetSource(path));
     _isPlaying = true;
+    notifyListeners();
+  }
+
+  // loop a particular song
+  void toggleLoop() async {
+    if(!_isLoopOn) {
+      // loop the song
+      _audioPlayer.setReleaseMode(ReleaseMode.loop);
+      _isLoopOn = true;
+    } else {
+      // turn off the looping
+      _audioPlayer.setReleaseMode(ReleaseMode.release);
+      _isLoopOn = false;
+
+    }
+    notifyListeners();
+  }
+
+  // make a song favourite
+  void toggleFavourite() async {
+    if(_playlist[currentSongIndex!].isFavourite == true) {
+      _playlist[currentSongIndex!].isFavourite = false;
+    } else {
+      _playlist[currentSongIndex!].isFavourite = true;
+    }
     notifyListeners();
   }
 

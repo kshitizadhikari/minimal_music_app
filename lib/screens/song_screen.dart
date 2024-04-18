@@ -48,7 +48,7 @@ class SongScreen extends StatelessWidget {
                       Text('S O N G  P A G E'),
 
                       //menu button
-                      IconButton(onPressed: () {}, icon: Icon(Icons.menu)),
+                      IconButton(onPressed: () {}, icon:const Icon(Icons.menu)),
                     ],
                   ),
                   const SizedBox(
@@ -81,10 +81,10 @@ class SongScreen extends StatelessWidget {
                                 ],
                               ),
                             ),
-                            Icon(
-                              Icons.favorite,
-                              color: Colors.red,
-                            ),
+                            IconButton(onPressed: () {
+                              value.toggleFavourite();
+                            }, icon: Icon(currentSong.isFavourite ? Icons.favorite : Icons.favorite_outline_rounded))
+
 
                             //heart icon
                           ],
@@ -92,7 +92,7 @@ class SongScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 25,
                   ),
                   //song duration progress
@@ -107,12 +107,22 @@ class SongScreen extends StatelessWidget {
                             Text(formatTime(value.currentDuration)),
 
                             //shuffle icon
-                            IconButton(onPressed: () {
-                              value.shuffle();
-                            }, icon: Icon(Icons.shuffle)),
+                            IconButton(
+                                onPressed: () {
+                                  value.shuffle();
+                                },
+                                icon: const Icon(Icons.shuffle)),
 
                             //repeat icon
-                            Icon(Icons.repeat),
+                            IconButton(
+                              onPressed: () {
+                                value.toggleLoop();
+                              },
+                              icon: Icon(
+                                Icons.repeat,
+                                color: value.isLoopOn ? Colors.green : null,
+                              ),
+                            ),
 
                             //end time
                             Text(formatTime(value.totalDuration)),
