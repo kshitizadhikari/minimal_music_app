@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:minimal_music_app/models/playlist_provider.dart';
 import 'package:minimal_music_app/screens/home_screen.dart';
+import 'package:minimal_music_app/screens/login_screen.dart';
 import 'package:minimal_music_app/themes/theme_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const HomeScreen(),
+      home: LoginScreen(),
       theme: Provider.of<ThemeProvider>(context).themeData,
     );
   }
