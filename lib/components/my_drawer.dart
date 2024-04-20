@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:minimal_music_app/screens/login_screen.dart';
 import 'package:minimal_music_app/screens/settings_screen.dart';
 
 class MyDrawer extends StatelessWidget {
@@ -47,6 +49,27 @@ class MyDrawer extends StatelessWidget {
                   context,
                   MaterialPageRoute(builder: (context) => SettingsScreen()),
                 );
+              },
+            ),
+          ),
+
+          //logout button
+          Padding(
+            padding: const EdgeInsets.only(top: 30, left: 70),
+            child: ListTile(
+              title: const Text("L O G O U T"),
+              leading: const Icon(Icons.logout),
+              onTap: () async {
+                //pop drawer
+                Navigator.pop(context);
+
+                try {
+                  // Perform logout action
+                  await FirebaseAuth.instance.signOut();
+                } catch (e) {
+                  // Handle any logout errors
+                  print("Error logging out: $e");
+                }
               },
             ),
           ),
