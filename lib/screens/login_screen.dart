@@ -1,5 +1,5 @@
 import 'dart:ui';
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -10,11 +10,14 @@ import 'package:minimal_music_app/components/neu_box.dart';
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
 
-  //text editing conttrollers
-  final usernameController = TextEditingController();
+  //text editing controllers
+  final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  void signUserIn() {}
+  void signUserIn() async {
+    await FirebaseAuth.instance.signInWithEmailAndPassword(email: emailController.text, password: passwordController.text);
+    // print("helloo");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,11 +46,11 @@ class LoginScreen extends StatelessWidget {
                 ),
             
                 const SizedBox(height: 25),
-                // user text field
+                // email text field
                 LoginTextField(
-                  controller: usernameController,
+                  controller: emailController,
                   obscureText: false,
-                  hintText: "Username",
+                  hintText: "Email",
                 ),
             
                 const SizedBox(height: 25),

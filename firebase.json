@@ -1,0 +1,1 @@
+{"flutter":{"platforms":{"android":{"default":{"projectId":"minimal-music","appId":"1:518567395640:android:4da810fd01ccac79be81cd","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"minimal-music","configurations":{"android":"1:518567395640:android:4da810fd01ccac79be81cd"}}}}}}
