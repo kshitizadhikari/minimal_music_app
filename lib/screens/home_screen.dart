@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:minimal_music_app/components/my_drawer.dart';
 import 'package:minimal_music_app/models/playlist_provider.dart';
@@ -6,8 +7,9 @@ import 'package:minimal_music_app/screens/song_screen.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  HomeScreen({super.key});
 
+  final user = FirebaseAuth.instance.currentUser!;
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }

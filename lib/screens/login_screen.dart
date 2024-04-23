@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,16 +6,71 @@ import 'package:minimal_music_app/components/login_textField.dart';
 import 'package:minimal_music_app/components/my_button.dart';
 import 'package:minimal_music_app/components/neu_box.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   LoginScreen({super.key});
 
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
   //text editing controllers
   final emailController = TextEditingController();
+
   final passwordController = TextEditingController();
 
+  void showErrorMessage(String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          content: Container(
+            height: 50,
+            width: 100,
+            child: Center(
+                child: Text(message),
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+
   void signUserIn() async {
-    await FirebaseAuth.instance.signInWithEmailAndPassword(email: emailController.text, password: passwordController.text);
-    // print("helloo");
+    //show loading circle
+    showDialog(
+      context: context,
+      builder: (context) {
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+      Navigator.pop(context); // Dismiss loading dialog upon successful sign-in
+    } on FirebaseAuthException catch (e) {
+      Navigator.pop(context); // Dismiss loading dialog upon sign-in failure
+      if (e.code == 'invalid-credential') {
+        showErrorMessage('Invalid Credential');
+      } else {
+        showErrorMessage('Error: ${e.message}'); // Print the error message
+        // Handle other errors
+      }
+    }
+
   }
 
   @override
@@ -38,13 +92,13 @@ class LoginScreen extends StatelessWidget {
                         height: 150, width: 150),
                   ],
                 ),
-            
+
                 // some text like welcome back
                 Text(
                   "Please fill out the following form",
                   style: TextStyle(color: Colors.grey.shade600),
                 ),
-            
+
                 const SizedBox(height: 25),
                 // email text field
                 LoginTextField(
@@ -52,7 +106,7 @@ class LoginScreen extends StatelessWidget {
                   obscureText: false,
                   hintText: "Email",
                 ),
-            
+
                 const SizedBox(height: 25),
                 // password text field
                 LoginTextField(
@@ -60,9 +114,9 @@ class LoginScreen extends StatelessWidget {
                   obscureText: true,
                   hintText: "Password",
                 ),
-            
+
                 const SizedBox(height: 25),
-            
+
                 //forgot password
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -81,15 +135,15 @@ class LoginScreen extends StatelessWidget {
                 const SizedBox(
                   height: 25,
                 ),
-            
+
                 //sign in button
                 NeuBox(
                     child: MyButton(
                   onTap: signUserIn,
                 )),
-            
+
                 const SizedBox(height: 25),
-            
+
                 //divider - or continue with
                 Row(
                   children: [
@@ -111,9 +165,9 @@ class LoginScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-            
+
                 const SizedBox(height: 50),
-            
+
                 // google image button
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -123,9 +177,9 @@ class LoginScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-            
+
                 const SizedBox(height: 20),
-            
+
                 const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
