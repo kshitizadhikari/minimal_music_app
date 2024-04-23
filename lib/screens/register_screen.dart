@@ -7,31 +7,31 @@ import 'package:minimal_music_app/components/my_button.dart';
 import 'package:minimal_music_app/components/neu_box.dart';
 import 'package:minimal_music_app/components/popup.dart';
 
-class LoginScreen extends StatefulWidget {
+class RegisterScreen extends StatefulWidget {
   final Function()? onTap;
-  LoginScreen({super.key, this.onTap});
+  RegisterScreen({super.key, this.onTap});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
   //text editing controllers
   final emailController = TextEditingController();
-
   final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
 
   void showErrorMessage(String message) {
     showDialog(
       context: context,
       builder: (context) {
-        return MyPopUp(title: 'Login Error', message: message);
+        return MyPopUp(title: 'Registration Error', message: message);
       },
     );
   }
 
 
-  void signUserIn() async {
+  void signUserUp() async {
     //show loading circle
     showDialog(
       context: context,
@@ -42,13 +42,17 @@ class _LoginScreenState extends State<LoginScreen> {
       },
     );
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailController.text,
-        password: passwordController.text,
-      );
-      Navigator.pop(context); // Dismiss loading dialog upon successful sign-in
+      if(passwordController.text == confirmPasswordController.text) {
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: emailController.text,
+          password: passwordController.text,
+        );
+        Navigator.pop(context);
+      } else {
+        showErrorMessage('Passwords do not match');
+      }
     } on FirebaseAuthException catch (e) {
-      Navigator.pop(context); // Dismiss loading dialog upon sign-in failure
+      Navigator.pop(context); // Dismiss loading dialog upon sign-up failure
       if (e.code == 'invalid-credential') {
         showErrorMessage('Invalid Credential');
       } else {
@@ -75,13 +79,14 @@ class _LoginScreenState extends State<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.asset('assets/images/login/music1.png',
-                        height: 150, width: 150),
+                        height: 100, width: 100),
                   ],
                 ),
+                const SizedBox(height: 50),
 
                 // some text like welcome back
                 Text(
-                  "Please fill out the following form",
+                  "Let\'s create an account for you!",
                   style: TextStyle(color: Colors.grey.shade600),
                 ),
 
@@ -94,6 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
 
                 const SizedBox(height: 25),
+
                 // password text field
                 LoginTextField(
                   controller: passwordController,
@@ -103,31 +109,21 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 const SizedBox(height: 25),
 
-                //forgot password
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        "Forgot Password ?",
-                        style: TextStyle(
-                          color: Colors.grey.shade600,
-                        ),
-                      ),
-                    ],
-                  ),
+                // password text field
+                LoginTextField(
+                  controller: confirmPasswordController,
+                  obscureText: true,
+                  hintText: "Confirm Password",
                 ),
-                const SizedBox(
-                  height: 25,
-                ),
+
+                const SizedBox(height: 25),
 
                 //sign in button
                 NeuBox(
                     child: MyButton(
-                      text: 'Sign In',
-                  onTap: signUserIn,
-                )),
+                      text: 'Sign Up',
+                      onTap: signUserUp,
+                    )),
 
                 const SizedBox(height: 25),
 
@@ -153,14 +149,14 @@ class _LoginScreenState extends State<LoginScreen> {
                   ],
                 ),
 
-                const SizedBox(height: 50),
+                const SizedBox(height: 25),
 
                 // google image button
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     NeuBox(
-                      child: Image.asset("assets/images/login/google.png", height: 50,),
+                      child: Image.asset("assets/images/login/google.png", height: 40,),
                     ),
                   ],
                 ),
@@ -171,14 +167,14 @@ class _LoginScreenState extends State<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Not a member? ",
+                      "Already have an accont?  ",
                       style: TextStyle(color: Colors.grey),
                     ),
                     SizedBox(width: 5),
                     GestureDetector(
                       onTap: widget.onTap,
                       child: Text(
-                        "Register Now",
+                        "Login",
                         style: TextStyle(color: Colors.blue),
                       ),
                     )
