@@ -1,5 +1,6 @@
 class Song
 {
+  final int id;
   final String songName;
   final String artistName;
   final String albumArtImagePath;
@@ -7,6 +8,7 @@ class Song
   bool isFavourite;
 
   Song({
+    required this.id,
     required this.songName,
     required this.artistName,
     required this.albumArtImagePath,

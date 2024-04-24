@@ -75,7 +75,7 @@ class SongScreen extends StatelessWidget {
                                     currentSong.songName,
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 20),
+                                        fontSize: 15),
                                   ),
                                   Text(currentSong.artistName),
                                 ],

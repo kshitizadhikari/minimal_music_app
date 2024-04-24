@@ -2,36 +2,41 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:minimal_music_app/models/song.dart';
 import 'dart:math';
+import 'package:on_audio_query/on_audio_query.dart';
 
 class PlaylistProvider extends ChangeNotifier {
-  final List<Song> _playlist = [
-    //song
-    Song(
-        songName: "Like We Used To",
-        artistName: "A Rocket to the Moon",
-        albumArtImagePath: "assets/images/a_rocket_to_the_moon.jpg",
-        audioPath: "music/A Rocket To The Moon-Like We Used To.wma",
-    ),
-    Song(
-        songName: "It's Time",
-        artistName: "Imagine Dragons",
-        albumArtImagePath: "assets/images/imagine_dragons.jpg",
-        audioPath: "music/Imagine Dragons-It's Time.mp3",
-    ),
-    Song(
-        songName: "Benediction",
-        artistName: "Luke Sital Singh",
-        albumArtImagePath: "assets/images/luke_sital_singh.jpg",
-        audioPath: "music/Luke Sital Singh-Benediction.mp3",
-    )
-  ];
+  final audioQuery = OnAudioQuery();
 
+  late List<Song> _playlist = [];
+
+  Future<void> loadSongs() async {
+    final _audioQuery = OnAudioQuery();
+    final List<SongModel> songModels = await _audioQuery.querySongs();
+    // Clear the existing songs list
+    _playlist.clear();
+
+    // Iterate over each SongModel and create a new Song object
+    songModels.forEach((songModel) {
+      final song = Song(
+        id: songModel.id,
+        songName: songModel.title ?? "",
+        artistName: songModel.artist ?? "",
+        albumArtImagePath: "assets/images/imagine_dragons.jpg", // Set album art path accordingly
+        audioPath: songModel.data ?? "",// choose the correct audio path
+        isFavourite: false, // Set default value for isFavourite
+      );
+
+      // Add the song to the songs list
+      _playlist.add(song);
+    });
+  }
 
   Random random = Random();
   //current song playing index
   int? _currentSongIndex;
   //G E T T E R S
   List<Song> get playlist => _playlist;
+
   int? get currentSongIndex => _currentSongIndex;
   bool get isPlaying => _isPlaying;
   bool get isLoopOn => _isLoopOn;
@@ -56,14 +61,15 @@ class PlaylistProvider extends ChangeNotifier {
   // initially not shuffled
   bool _isLoopOn = false;
 
-  // play the song
+// play the song
   void play() async {
     final String path = _playlist[currentSongIndex!].audioPath;
     await _audioPlayer.stop(); // stop the current song
-    await _audioPlayer.play(AssetSource(path));
+    await _audioPlayer.play(DeviceFileSource(path));
     _isPlaying = true;
     notifyListeners();
   }
+
 
   // pause the song
   void pause() async {
@@ -94,24 +100,27 @@ class PlaylistProvider extends ChangeNotifier {
     await _audioPlayer.seek(position);
   }
 
-  // shuffle the songs
   void shuffle() async {
-    int randomIndex = random.nextInt(_playlist.length);
-    while(randomIndex == _currentSongIndex) {
-      int randomIndex = random.nextInt(_playlist.length);
-    }
+    // Generate a random index different from the current song index
+    int randomIndex;
+    do {
+      randomIndex = random.nextInt(_playlist.length);
+    } while (randomIndex == _currentSongIndex);
 
     _currentSongIndex = randomIndex;
-    final String path = _playlist[currentSongIndex!].audioPath;
-    await _audioPlayer.stop(); // stop the current song
-    await _audioPlayer.play(AssetSource(path));
+    String path = _playlist[randomIndex].audioPath;
+
+    // Play the audio of the randomly selected song
+    await _audioPlayer.stop(); // Stop the current song
+    await _audioPlayer.play(DeviceFileSource(path));
     _isPlaying = true;
     notifyListeners();
   }
 
+
   // loop a particular song
   void toggleLoop() async {
-    if(!_isLoopOn) {
+    if (!_isLoopOn) {
       // loop the song
       _audioPlayer.setReleaseMode(ReleaseMode.loop);
       _isLoopOn = true;
@@ -119,14 +128,13 @@ class PlaylistProvider extends ChangeNotifier {
       // turn off the looping
       _audioPlayer.setReleaseMode(ReleaseMode.release);
       _isLoopOn = false;
-
     }
     notifyListeners();
   }
 
   // make a song favourite
   void toggleFavourite() async {
-    if(_playlist[currentSongIndex!].isFavourite == true) {
+    if (_playlist[currentSongIndex!].isFavourite == true) {
       _playlist[currentSongIndex!].isFavourite = false;
     } else {
       _playlist[currentSongIndex!].isFavourite = true;
