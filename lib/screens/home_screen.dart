@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:minimal_music_app/components/my_textfield.dart';
 import 'package:minimal_music_app/components/my_drawer.dart';
 import 'package:minimal_music_app/components/neu_box.dart';
 import 'package:minimal_music_app/models/playlist_provider.dart';
@@ -18,7 +19,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   //get the playlist provider
   late final dynamic playlistProvider;
-  late final List<Song> songs;
+
   @override
   void initState() {
     super.initState();
@@ -39,22 +40,23 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+  
+  //search a song
+  void runFilter(String value) {
+    // Check if playlistProvider is initialized
+    if (playlistProvider != null) {
+      // Call the searchSong method with the provided value
+      playlistProvider.searchSong(value);
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Text('MusicVerse'),
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.search),
-            ),
-          ],
-        ),
+        title: const Text('MusicVerse'),
       ),
       drawer: const MyDrawer(),
       body: Consumer<PlaylistProvider>(builder: (context, value, child) {
@@ -62,23 +64,45 @@ class _HomeScreenState extends State<HomeScreen> {
         value.loadSongs();
         var playlist = value.playlist;
         // return the list view UI
-        return ListView.builder(
-            itemCount: playlist.length,
-            itemBuilder: (context, index) {
-              final Song song = playlist[index];
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: NeuBox(
-                  child: ListTile(
-                    title: Text(song.songName),
-                    subtitle: Text(song.artistName),
-                    leading: Image.asset(song.albumArtImagePath),
-                    onTap: () => gotoSong(index),
-                  ),
+        return Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.all(10.0),
+              child: NeuBox(
+                child: MyTextField(
+                  hintText: 'Enter a song',
+                  obscureText: false,
+                  labelText: 'Search',
+                  suffixIcon: const Icon(Icons.search),
+                  onChanged: (value) => runFilter(value),
                 ),
-              );
-            });
+              ),
+            ),
+            const SizedBox(height: 20),
+            Expanded(
+              child: ListView.builder(
+                  itemCount: playlist.length,
+                  itemBuilder: (context, index) {
+                    final Song song = playlist[index];
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10),
+                      child: NeuBox(
+                        child: ListTile(
+                          title: Text(song.songName),
+                          subtitle: Text(song.artistName),
+                          leading: Image.asset(song.albumArtImagePath),
+                          onTap: () => gotoSong(index),
+                        ),
+                      ),
+                    );
+                  }),
+            ),
+          ],
+        );
       }),
     );
   }
+
+
 }

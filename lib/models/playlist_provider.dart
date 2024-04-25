@@ -172,8 +172,19 @@ class PlaylistProvider extends ChangeNotifier {
 
   //search for a particular song
   void searchSong(String song) {
-    print(song);
+    // Convert the search query to lowercase for case-insensitive search
+    final query = song.toLowerCase();
+
+    // Filter songs that contain the search query in either song name or artist name
+    final searchResult = _playlist.where((song) =>
+    song.songName.toLowerCase().contains(query) ||
+        song.artistName.toLowerCase().contains(query)).toList();
+
+    // Notify listeners with the search result
+    _playlist = searchResult;
+    notifyListeners();
   }
+
 
   // list the duration
   void listenToDuration() {

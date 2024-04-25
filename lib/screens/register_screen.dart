@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:minimal_music_app/components/login_textField.dart';
+import 'package:minimal_music_app/components/my_textfield.dart';
 import 'package:minimal_music_app/components/my_button.dart';
 import 'package:minimal_music_app/components/neu_box.dart';
 import 'package:minimal_music_app/components/popup.dart';
@@ -106,28 +106,37 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                 const SizedBox(height: 25),
                 // email text field
-                LoginTextField(
+                MyTextField(
                   controller: emailController,
                   obscureText: false,
-                  hintText: "Email",
+                  hintText: "Enter Email",
+                  labelText: "Email",
+                  suffixIcon: Icon(null),
+
                 ),
 
                 const SizedBox(height: 25),
 
                 // password text field
-                LoginTextField(
+                MyTextField(
                   controller: passwordController,
                   obscureText: true,
-                  hintText: "Password",
+                  hintText: "Enter Password",
+                  labelText: "Password",
+                  suffixIcon: Icon(null),
+
                 ),
 
                 const SizedBox(height: 25),
 
                 // password text field
-                LoginTextField(
+                MyTextField(
                   controller: confirmPasswordController,
                   obscureText: true,
-                  hintText: "Confirm Password",
+                  hintText: "Enter Confirm Password",
+                  labelText: "Confirm Password",
+                  suffixIcon: Icon(null),
+
                 ),
 
                 const SizedBox(height: 25),
