@@ -32,7 +32,9 @@ class LoginTextField extends StatelessWidget {
         )
 
       ),
-
+      style: TextStyle(
+          color: Theme.of(context).colorScheme.background,
+      ),
     );
   }
 }

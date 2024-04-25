@@ -27,7 +27,6 @@ class MyPopUp extends StatelessWidget {
         TextButton(
           onPressed: () {
             Navigator.pop(context);
-            Navigator.pop(context);
           },
           child: const Text('OK'),
         ),

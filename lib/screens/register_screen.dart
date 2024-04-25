@@ -6,6 +6,9 @@ import 'package:minimal_music_app/components/login_textField.dart';
 import 'package:minimal_music_app/components/my_button.dart';
 import 'package:minimal_music_app/components/neu_box.dart';
 import 'package:minimal_music_app/components/popup.dart';
+import 'package:provider/provider.dart';
+
+import '../themes/theme_provider.dart';
 
 class RegisterScreen extends StatefulWidget {
   final Function()? onTap;
@@ -73,7 +76,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                const SizedBox(height: 50),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    CupertinoSwitch(
+                        value: Provider.of<ThemeProvider>(context, listen: false)
+                            .isDarkMode,
+                        onChanged: (value) =>
+                            Provider.of<ThemeProvider>(context, listen: false)
+                                .toggleTheme()),
+                  ],
+                ),
                 //logo
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,

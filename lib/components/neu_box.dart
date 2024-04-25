@@ -30,7 +30,7 @@ class NeuBox extends StatelessWidget {
           ),
         ],
       ),
-      padding: EdgeInsets.all(14),
+      padding: const EdgeInsets.all(10),
       child: child,
     );
   }

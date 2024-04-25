@@ -21,8 +21,9 @@ class PlaylistProvider extends ChangeNotifier {
         id: songModel.id,
         songName: songModel.title ?? "",
         artistName: songModel.artist ?? "",
-        albumArtImagePath: "assets/images/imagine_dragons.jpg", // Set album art path accordingly
-        audioPath: songModel.data ?? "",// choose the correct audio path
+        albumArtImagePath:
+            "assets/images/imagine_dragons.jpg", // Set album art path accordingly
+        audioPath: songModel.data ?? "", // choose the correct audio path
         isFavourite: false, // Set default value for isFavourite
       );
 
@@ -70,7 +71,6 @@ class PlaylistProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-
   // pause the song
   void pause() async {
     await _audioPlayer.pause();
@@ -116,7 +116,6 @@ class PlaylistProvider extends ChangeNotifier {
     _isPlaying = true;
     notifyListeners();
   }
-
 
   // loop a particular song
   void toggleLoop() async {
@@ -169,6 +168,11 @@ class PlaylistProvider extends ChangeNotifier {
       }
     }
     notifyListeners();
+  }
+
+  //search for a particular song
+  void searchSong(String song) {
+    print(song);
   }
 
   // list the duration

@@ -6,6 +6,9 @@ import 'package:minimal_music_app/components/login_textField.dart';
 import 'package:minimal_music_app/components/my_button.dart';
 import 'package:minimal_music_app/components/neu_box.dart';
 import 'package:minimal_music_app/components/popup.dart';
+import 'package:provider/provider.dart';
+
+import '../themes/theme_provider.dart';
 
 class LoginScreen extends StatefulWidget {
   final Function()? onTap;
@@ -29,7 +32,6 @@ class _LoginScreenState extends State<LoginScreen> {
       },
     );
   }
-
 
   void signUserIn() async {
     //show loading circle
@@ -69,19 +71,33 @@ class _LoginScreenState extends State<LoginScreen> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                const SizedBox(height: 50),
+                //change theme mode
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    CupertinoSwitch(
+                        value: Provider.of<ThemeProvider>(context, listen: false)
+                            .isDarkMode,
+                        onChanged: (value) =>
+                            Provider.of<ThemeProvider>(context, listen: false)
+                                .toggleTheme()),
+                  ],
+                ),
                 //logo
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.asset('assets/images/login/music1.png',
                         height: 150, width: 150),
+
+
                   ],
                 ),
 
                 // some text like welcome back
                 Text(
-                  "Please fill out the following form",
+                  "Welcome back!!",
                   style: TextStyle(color: Colors.grey.shade600),
                 ),
 
@@ -170,14 +186,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
+                    const Text(
                       "Not a member? ",
                       style: TextStyle(color: Colors.grey),
                     ),
-                    SizedBox(width: 5),
+                    const SizedBox(width: 5),
                     GestureDetector(
                       onTap: widget.onTap,
-                      child: Text(
+                      child: const Text(
                         "Register Now",
                         style: TextStyle(color: Colors.blue),
                       ),
