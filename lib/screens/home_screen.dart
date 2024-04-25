@@ -11,12 +11,14 @@ import 'package:provider/provider.dart';
 class HomeScreen extends StatefulWidget {
   HomeScreen({super.key});
 
-  final user = FirebaseAuth.instance.currentUser!;
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
+  final user = FirebaseAuth.instance.currentUser!;
+
   //get the playlist provider
   late final dynamic playlistProvider;
 
@@ -36,11 +38,11 @@ class _HomeScreenState extends State<HomeScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => const SongScreen(),
+        builder: (context) => SongScreen(user: user),
       ),
     );
   }
-  
+
   //search a song
   void runFilter(String value) {
     // Check if playlistProvider is initialized

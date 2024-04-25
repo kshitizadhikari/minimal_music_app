@@ -1,12 +1,13 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:minimal_music_app/models/song.dart';
+import 'package:minimal_music_app/services/firestore.dart';
 import 'dart:math';
 import 'package:on_audio_query/on_audio_query.dart';
 
 class PlaylistProvider extends ChangeNotifier {
   final audioQuery = OnAudioQuery();
-
+  final FireStoreService fireStoreService = FireStoreService();
   late List<Song> _playlist = [];
 
   Future<void> loadSongs() async {
@@ -35,12 +36,15 @@ class PlaylistProvider extends ChangeNotifier {
   Random random = Random();
   //current song playing index
   int? _currentSongIndex;
+
+  bool? _isFav;
   //G E T T E R S
   List<Song> get playlist => _playlist;
 
   int? get currentSongIndex => _currentSongIndex;
   bool get isPlaying => _isPlaying;
   bool get isLoopOn => _isLoopOn;
+  bool? get isFav => _isFav;
   Duration get totalDuration => _totalDuration;
   Duration get currentDuration => _currentDuration;
 
@@ -176,15 +180,22 @@ class PlaylistProvider extends ChangeNotifier {
     final query = song.toLowerCase();
 
     // Filter songs that contain the search query in either song name or artist name
-    final searchResult = _playlist.where((song) =>
-    song.songName.toLowerCase().contains(query) ||
-        song.artistName.toLowerCase().contains(query)).toList();
+    final searchResult = _playlist
+        .where((song) =>
+            song.songName.toLowerCase().contains(query) ||
+            song.artistName.toLowerCase().contains(query))
+        .toList();
 
     // Notify listeners with the search result
     _playlist = searchResult;
     notifyListeners();
   }
 
+  //check if a song is favourite or not
+  Future<bool> checkFavourite(int songId, String userId) async {
+    bool fav = await fireStoreService.checkIfFavourite(songId, userId);
+    return fav;
+  }
 
   // list the duration
   void listenToDuration() {
@@ -215,5 +226,13 @@ class PlaylistProvider extends ChangeNotifier {
       play();
     }
     notifyListeners();
+  }
+
+  set isFav(value) {
+    if (_isFav == false) {
+      _isFav = true;
+    } else {
+      _isFav = false;
+    }
   }
 }
