@@ -93,7 +93,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: ListTile(
                           title: Text(song.songName),
                           subtitle: Text(song.artistName),
-                          leading: Image.asset(song.albumArtImagePath),
+                          leading: ClipRRect(
+                              borderRadius: BorderRadius.circular(5),
+                              child: Image.asset(song.albumArtImagePath)),
                           onTap: () => gotoSong(index),
                         ),
                       ),

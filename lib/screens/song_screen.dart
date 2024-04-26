@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:minimal_music_app/components/neu_box.dart';
 import 'package:minimal_music_app/components/popup.dart';
@@ -43,7 +41,7 @@ class _SongScreenState extends State<SongScreen> {
                 child: FutureBuilder(
                   future: value.checkFavourite(currentSong.id, widget.user.uid),
                   builder: ((context, snapshot) {
-                    if(snapshot.hasData) {
+                    if (snapshot.hasData) {
                       var fav = snapshot.data;
                       return Column(
                         children: [
@@ -56,14 +54,18 @@ class _SongScreenState extends State<SongScreen> {
                                   onPressed: () {
                                     Navigator.pop(context);
                                   },
-                                  icon: const Icon(Icons.arrow_back_ios_new_outlined)),
+                                  icon: const Icon(
+                                      Icons.arrow_back_ios_new_outlined)),
 
                               //title
                               const Text('S O N G  P A G E'),
 
                               //menu button
-                              IconButton(
-                                  onPressed: () {}, icon: const Icon(Icons.menu)),
+                              // IconButton(
+                              //   onPressed: () {},
+                              //   icon: const Icon(Icons.menu),
+                              // ),
+                              Container(child: Image.asset("assets/images/music2.gif"), height: 50, width: 50,),
                             ],
                           ),
                           const SizedBox(
@@ -76,19 +78,19 @@ class _SongScreenState extends State<SongScreen> {
                               children: [
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(12),
-                                  child:
-                                  Image.asset(currentSong.albumArtImagePath),
+                                  child: Image.asset(
+                                      currentSong.albumArtImagePath),
                                 ),
                                 Row(
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     //song and artist name
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Column(
                                         crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Text(
                                             currentSong.songName,
@@ -105,7 +107,9 @@ class _SongScreenState extends State<SongScreen> {
                                         fireStoreService.toggleFavourite(
                                             currentSong.id, widget.user.uid);
                                       },
-                                      icon: Icon(fav == true ? Icons.favorite : Icons.favorite_outline_rounded ),
+                                      icon: Icon(fav == true
+                                          ? Icons.favorite
+                                          : Icons.favorite_outline_rounded),
                                       // icon: Icon(Icons.no_accounts),
                                     ),
 
@@ -125,7 +129,7 @@ class _SongScreenState extends State<SongScreen> {
                               children: [
                                 Row(
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceAround,
+                                      MainAxisAlignment.spaceAround,
                                   children: [
                                     //start time
                                     Text(formatTime(value.currentDuration)),
@@ -144,8 +148,9 @@ class _SongScreenState extends State<SongScreen> {
                                       },
                                       icon: Icon(
                                         Icons.repeat,
-                                        color:
-                                        value.isLoopOn ? Colors.green : null,
+                                        color: value.isLoopOn
+                                            ? Colors.green
+                                            : null,
                                       ),
                                     ),
 
@@ -162,7 +167,8 @@ class _SongScreenState extends State<SongScreen> {
                                     value: value.currentDuration.inSeconds
                                         .toDouble(),
                                     min: 0,
-                                    max: value.totalDuration.inSeconds.toDouble(),
+                                    max: value.totalDuration.inSeconds
+                                        .toDouble(),
                                     activeColor: Colors.green,
                                     onChanged: (double double) {
                                       //when the user is sliding the slider
@@ -222,12 +228,15 @@ class _SongScreenState extends State<SongScreen> {
                           )
                         ],
                       );
-                    } else if(snapshot.connectionState == ConnectionState.waiting){
+                    } else if (snapshot.connectionState ==
+                        ConnectionState.waiting) {
                       return const Center(
                         child: CircularProgressIndicator(),
                       );
                     } else {
-                      return const MyPopUp(title: 'Music Error', message: 'Error fetching music');
+                      return const MyPopUp(
+                          title: 'Music Error',
+                          message: 'Error fetching music');
                     }
                   }),
                 ),

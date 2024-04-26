@@ -92,11 +92,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image.asset('assets/images/login/music1.png',
-                        height: 100, width: 100),
+                    Image.asset('assets/images/musicLogo1.gif',
+                        height: 150, width: 200),
                   ],
                 ),
-                const SizedBox(height: 50),
 
                 // some text like welcome back
                 Text(

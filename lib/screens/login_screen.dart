@@ -88,8 +88,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image.asset('assets/images/login/music1.png',
-                        height: 150, width: 150),
+                    Image.asset('assets/images/musicLogo1.gif',
+                        height: 160, width: 200),
 
 
                   ],
