@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:minimal_music_app/components/neu_box.dart';
+import 'package:minimal_music_app/components/popup.dart';
 import 'package:minimal_music_app/models/playlist_provider.dart';
 import 'package:minimal_music_app/services/firestore.dart';
 import 'package:provider/provider.dart';
@@ -101,7 +102,7 @@ class _SongScreenState extends State<SongScreen> {
                                     ),
                                     IconButton(
                                       onPressed: () {
-                                        fireStoreService.addToFavourites(
+                                        fireStoreService.toggleFavourite(
                                             currentSong.id, widget.user.uid);
                                       },
                                       icon: Icon(fav == true ? Icons.favorite : Icons.favorite_outline_rounded ),
@@ -221,8 +222,12 @@ class _SongScreenState extends State<SongScreen> {
                           )
                         ],
                       );
+                    } else if(snapshot.connectionState == ConnectionState.waiting){
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
                     } else {
-                      return const CircularProgressIndicator();
+                      return const MyPopUp(title: 'Music Error', message: 'Error fetching music');
                     }
                   }),
                 ),

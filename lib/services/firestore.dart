@@ -11,6 +11,16 @@ class FireStoreService {
     );
   }
 
+  Future<void> toggleFavourite(int songId, String userId) async {
+    //check if the song already exists in favourite ..if it doesn't call addToFavourites else call deleteFromFavourites
+    final fav = await checkIfFavourite(songId, userId);
+    if(fav == true) {
+      deleteFromFavourites(songId, userId);
+    } else {
+      addToFavourites(songId, userId);
+    }
+  }
+
   //create favourite
 
   //read favourite
@@ -21,7 +31,17 @@ class FireStoreService {
   //update favourite
 
   //delete favourite
-
+  Future<void> deleteFromFavourites(int songId, String userId) {
+    return favourites
+        .where('song_id', isEqualTo: songId)
+        .where('user_id', isEqualTo: userId)
+        .get()
+        .then((querySnapshot) {
+      for (var doc in querySnapshot.docs) {
+        doc.reference.delete();
+      }
+    });
+  }
   //check favourite
   Future<bool> checkIfFavourite(int songId, String userId) async {
     // Query the favourites collection to check if the document exists
