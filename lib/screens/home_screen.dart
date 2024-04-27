@@ -5,6 +5,7 @@ import 'package:minimal_music_app/components/my_drawer.dart';
 import 'package:minimal_music_app/components/neu_box.dart';
 import 'package:minimal_music_app/models/playlist_provider.dart';
 import 'package:minimal_music_app/models/song.dart';
+import 'package:minimal_music_app/screens/playlist_screen.dart';
 import 'package:minimal_music_app/screens/song_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -16,7 +17,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
   final user = FirebaseAuth.instance.currentUser!;
 
   //get the playlist provider
@@ -28,85 +28,68 @@ class _HomeScreenState extends State<HomeScreen> {
     playlistProvider = Provider.of<PlaylistProvider>(context, listen: false);
   }
 
-  //goto a song
-  void gotoSong(int index) {
-    //update current song index
-
-    playlistProvider.currentSongIndex = index;
-
-    //navigate to song page
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => SongScreen(user: user),
-      ),
-    );
-  }
-
-  //search a song
-  void runFilter(String value) {
-    // Check if playlistProvider is initialized
-    if (playlistProvider != null) {
-      // Call the searchSong method with the provided value
-      playlistProvider.searchSong(value);
-    }
-  }
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
-        title: const Text('MusicVerse'),
+        title: const Padding(
+          padding: EdgeInsets.only(left: 27),
+          child: Text(
+            'MusicVerse',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 25,
+              letterSpacing: 5,
+            ),
+          ),
+        ),
       ),
       drawer: const MyDrawer(),
       body: Consumer<PlaylistProvider>(builder: (context, value, child) {
-        //get the playlist
-        value.loadSongs();
-        var playlist = value.playlist;
-        // return the list view UI
         return Column(
           children: [
-            Padding(
-              padding: EdgeInsets.all(10.0),
+            const SizedBox(height: 20),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
               child: NeuBox(
-                child: MyTextField(
-                  hintText: 'Enter a song',
-                  obscureText: false,
-                  labelText: 'Search',
-                  suffixIcon: const Icon(Icons.search),
-                  onChanged: (value) => runFilter(value),
+                child: ListTile(
+                  title: Text(
+                    'My Favourites',
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 5),
+                  ),
+                  trailing: Icon(Icons.favorite_outlined),
                 ),
               ),
             ),
-            const SizedBox(height: 20),
-            Expanded(
-              child: ListView.builder(
-                  itemCount: playlist.length,
-                  itemBuilder: (context, index) {
-                    final Song song = playlist[index];
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 10),
-                      child: NeuBox(
-                        child: ListTile(
-                          title: Text(song.songName),
-                          subtitle: Text(song.artistName),
-                          leading: ClipRRect(
-                              borderRadius: BorderRadius.circular(5),
-                              child: Image.asset(song.albumArtImagePath)),
-                          onTap: () => gotoSong(index),
-                        ),
-                      ),
+             Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              child: NeuBox(
+                child: ListTile(
+                  title: const Text(
+                    'Songs',
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 5),
+                  ),
+                  trailing: const Icon(Icons.my_library_music_rounded),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => PlaylistScreen()),
                     );
-                  }),
+                  },
+
+                ),
+              ),
             ),
           ],
         );
       }),
     );
   }
-
-
 }

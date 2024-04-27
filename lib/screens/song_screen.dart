@@ -51,11 +51,12 @@ class _SongScreenState extends State<SongScreen> {
                             children: [
                               //back button
                               IconButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  icon: const Icon(
-                                      Icons.arrow_back_ios_new_outlined)),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                icon: const Icon(
+                                    Icons.arrow_back_ios_new_outlined),
+                              ),
 
                               //title
                               const Text('S O N G  P A G E'),
@@ -65,7 +66,11 @@ class _SongScreenState extends State<SongScreen> {
                               //   onPressed: () {},
                               //   icon: const Icon(Icons.menu),
                               // ),
-                              Container(child: Image.asset("assets/images/music2.gif"), height: 50, width: 50,),
+                              Container(
+                                child: Image.asset("assets/images/music2.gif"),
+                                height: 50,
+                                width: 50,
+                              ),
                             ],
                           ),
                           const SizedBox(
