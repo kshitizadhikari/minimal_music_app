@@ -21,15 +21,6 @@ class FireStoreService {
     }
   }
 
-  //create favourite
-
-  //read favourite
-  Stream<QuerySnapshot> getFavouritesStream() {
-    final favouriteStream = favourites.orderBy('timestamp', descending: true).snapshots();
-    return favouriteStream;
-  }
-  //update favourite
-
   //delete favourite
   Future<void> deleteFromFavourites(int songId, String userId) {
     return favourites

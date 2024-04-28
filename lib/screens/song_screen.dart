@@ -61,15 +61,10 @@ class _SongScreenState extends State<SongScreen> {
                               //title
                               const Text('S O N G  P A G E'),
 
-                              //menu button
-                              // IconButton(
-                              //   onPressed: () {},
-                              //   icon: const Icon(Icons.menu),
-                              // ),
-                              Container(
-                                child: Image.asset("assets/images/music2.gif"),
+                              SizedBox(
                                 height: 50,
                                 width: 50,
+                                child: Image.asset("assets/images/music2.gif"),
                               ),
                             ],
                           ),
@@ -115,7 +110,6 @@ class _SongScreenState extends State<SongScreen> {
                                       icon: Icon(fav == true
                                           ? Icons.favorite
                                           : Icons.favorite_outline_rounded),
-                                      // icon: Icon(Icons.no_accounts),
                                     ),
 
                                     //heart icon

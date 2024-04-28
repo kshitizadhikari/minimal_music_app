@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:minimal_music_app/components/my_textfield.dart';
-import 'package:minimal_music_app/components/my_drawer.dart';
 import 'package:minimal_music_app/components/neu_box.dart';
 import 'package:minimal_music_app/models/playlist_provider.dart';
 import 'package:minimal_music_app/models/song.dart';
@@ -58,7 +57,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
         backgroundColor: Theme.of(context).colorScheme.background,
         body: Consumer<PlaylistProvider>(builder: (context, value, child) {
           //get the playlist
-          value.loadSongs();
+          value.loadSongs(user.uid);
           var playlist = value.playlist;
           // return the list view UI
           return Padding(

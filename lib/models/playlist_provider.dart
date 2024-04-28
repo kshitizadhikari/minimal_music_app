@@ -9,15 +9,16 @@ class PlaylistProvider extends ChangeNotifier {
   final audioQuery = OnAudioQuery();
   final FireStoreService fireStoreService = FireStoreService();
   late List<Song> _playlist = [];
+  late List<Song> _favPlaylist = [];
 
-  Future<void> loadSongs() async {
+  Future<void> loadSongs(String userId) async {
     final _audioQuery = OnAudioQuery();
     final List<SongModel> songModels = await _audioQuery.querySongs();
     // Clear the existing songs list
     _playlist.clear();
 
     // Iterate over each SongModel and create a new Song object
-    songModels.forEach((songModel) {
+    songModels.forEach((songModel) async {
       final song = Song(
         id: songModel.id,
         songName: songModel.title ?? "",
@@ -31,6 +32,32 @@ class PlaylistProvider extends ChangeNotifier {
       // Add the song to the songs list
       _playlist.add(song);
     });
+    notifyListeners();
+  }
+
+  Future<List<Song>> loadFavoriteSongs(String userId) async {
+    final _audioQuery = OnAudioQuery();
+    final List<SongModel> songModels = await _audioQuery.querySongs();
+    // Clear the existing songs list
+    _favPlaylist.clear();
+
+    // Iterate over each SongModel and create a new Song object
+    for (var songModel in songModels) {
+      final song = Song(
+        id: songModel.id,
+        songName: songModel.title ?? "",
+        artistName: songModel.artist ?? "",
+        albumArtImagePath: "assets/images/music5.gif", // Set album art path accordingly
+        audioPath: songModel.data ?? "", // choose the correct audio path
+        isFavourite: false, // Set default value for isFavourite
+      );
+
+      // Check if the song is a favorite
+      if (await fireStoreService.checkIfFavourite(songModel.id, userId)) {
+        _favPlaylist.add(song);
+      }
+    }
+    return _favPlaylist;
   }
 
   Random random = Random();
@@ -40,7 +67,7 @@ class PlaylistProvider extends ChangeNotifier {
   bool? _isFav;
   //G E T T E R S
   List<Song> get playlist => _playlist;
-
+  List<Song> get favPlaylist => _favPlaylist;
   int? get currentSongIndex => _currentSongIndex;
   bool get isPlaying => _isPlaying;
   bool get isLoopOn => _isLoopOn;
