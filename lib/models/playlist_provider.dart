@@ -9,7 +9,6 @@ class PlaylistProvider extends ChangeNotifier {
   final audioQuery = OnAudioQuery();
   final FireStoreService fireStoreService = FireStoreService();
   late List<Song> _playlist = [];
-  late List<Song> _favPlaylist = [];
 
   Future<void> loadSongs(String userId) async {
     final _audioQuery = OnAudioQuery();
@@ -24,7 +23,7 @@ class PlaylistProvider extends ChangeNotifier {
         songName: songModel.title ?? "",
         artistName: songModel.artist ?? "",
         albumArtImagePath:
-            "assets/images/music5.gif", // Set album art path accordingly
+            "assets/images/a_rocket_to_the_moon.jpg", // Set album art path accordingly
         audioPath: songModel.data ?? "", // choose the correct audio path
         isFavourite: false, // Set default value for isFavourite
       );
@@ -32,6 +31,7 @@ class PlaylistProvider extends ChangeNotifier {
       // Add the song to the songs list
       _playlist.add(song);
     });
+    playlist = _playlist;
     notifyListeners();
   }
 
@@ -39,26 +39,29 @@ class PlaylistProvider extends ChangeNotifier {
     final _audioQuery = OnAudioQuery();
     final List<SongModel> songModels = await _audioQuery.querySongs();
     // Clear the existing songs list
-    _favPlaylist.clear();
-
+    _playlist.clear();
     // Iterate over each SongModel and create a new Song object
     for (var songModel in songModels) {
       final song = Song(
         id: songModel.id,
         songName: songModel.title ?? "",
         artistName: songModel.artist ?? "",
-        albumArtImagePath: "assets/images/music5.gif", // Set album art path accordingly
+        albumArtImagePath:
+        "assets/images/a_rocket_to_the_moon.jpg", // Set album art path accordingly
         audioPath: songModel.data ?? "", // choose the correct audio path
         isFavourite: false, // Set default value for isFavourite
       );
 
       // Check if the song is a favorite
       if (await fireStoreService.checkIfFavourite(songModel.id, userId)) {
-        _favPlaylist.add(song);
+        _playlist.add(song);
       }
     }
-    return _favPlaylist;
+    playlist = _playlist;
+    notifyListeners();
+    return _playlist;
   }
+
 
   Random random = Random();
   //current song playing index
@@ -67,7 +70,7 @@ class PlaylistProvider extends ChangeNotifier {
   bool? _isFav;
   //G E T T E R S
   List<Song> get playlist => _playlist;
-  List<Song> get favPlaylist => _favPlaylist;
+  // List<Song> get favPlaylist => _favPlaylist;
   int? get currentSongIndex => _currentSongIndex;
   bool get isPlaying => _isPlaying;
   bool get isLoopOn => _isLoopOn;
@@ -183,6 +186,7 @@ class PlaylistProvider extends ChangeNotifier {
         currentSongIndex = 0;
       }
     }
+    notifyListeners();
   }
 
   // play previous song
@@ -213,6 +217,9 @@ class PlaylistProvider extends ChangeNotifier {
             song.artistName.toLowerCase().contains(query))
         .toList();
 
+    // for(var song in _playlist) {
+    //   print(song.songName);
+    // }
     // Notify listeners with the search result
     _playlist = searchResult;
     notifyListeners();
@@ -261,5 +268,10 @@ class PlaylistProvider extends ChangeNotifier {
     } else {
       _isFav = false;
     }
+  }
+
+  set playlist(List<Song> newPlaylist) {
+    _playlist = newPlaylist;
+    notifyListeners();
   }
 }

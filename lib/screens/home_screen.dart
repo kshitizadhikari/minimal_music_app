@@ -18,17 +18,13 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final user = FirebaseAuth.instance.currentUser!;
 
-  //get the playlist provider
-  late final dynamic playlistProvider;
-
   @override
   void initState() {
     super.initState();
-    playlistProvider = Provider.of<PlaylistProvider>(context, listen: false);
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext x) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
@@ -45,8 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       drawer: const MyDrawer(),
-      body: Consumer<PlaylistProvider>(builder: (context, value, child) {
-        return Column(
+      body: Column(
           children: [
             const SizedBox(height: 20),
             Padding(
@@ -92,8 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ],
-        );
-      }),
+        ),
     );
   }
 }

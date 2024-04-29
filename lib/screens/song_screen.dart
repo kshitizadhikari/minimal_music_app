@@ -7,13 +7,20 @@ import 'package:provider/provider.dart';
 
 class SongScreen extends StatefulWidget {
   final user;
-  SongScreen({super.key, this.user});
+  const SongScreen({super.key, this.user});
   @override
   State<SongScreen> createState() => _SongScreenState();
 }
 
 class _SongScreenState extends State<SongScreen> {
   final FireStoreService fireStoreService = FireStoreService();
+  late final PlaylistProvider playlistProvider;
+
+  @override
+  void initState() {
+    super.initState();
+    playlistProvider = Provider.of<PlaylistProvider>(context, listen: false);
+  }
 
   //convert duration into min:sec
   String formatTime(Duration duration) {

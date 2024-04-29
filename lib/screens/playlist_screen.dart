@@ -42,80 +42,77 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
   }
 
   //search a song
-  void runFilter(String value) {
+  void runFilter(String value) async {
     // Check if playlistProvider is initialized
     if (playlistProvider != null) {
       // Call the searchSong method with the provided value
-      playlistProvider.searchSong(value);
+      await playlistProvider.searchSong(value);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.background,
-        body: Consumer<PlaylistProvider>(builder: (context, value, child) {
-          //get the playlist
-          value.loadSongs(user.uid);
-          var playlist = value.playlist;
-          // return the list view UI
-          return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 25),
-            child: Column(
-              children: [
-
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          //back button
-                          IconButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            icon: const Icon(Icons.arrow_back_ios_new_outlined),
-                          ),
-
-                          //title
-                          const Text(
-                            'MusicVerse',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 5,
+      child: Consumer<PlaylistProvider>(
+        builder: (context, playlistProviderModel, child) {
+          playlistProviderModel.loadSongs(user.uid);
+          var playlist = playlistProviderModel.playlist;
+          return Scaffold(
+            backgroundColor: Theme.of(context).colorScheme.background,
+            // return the list view UI
+            body: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 25),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            //back button
+                            IconButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              icon:
+                                  const Icon(Icons.arrow_back_ios_new_outlined),
                             ),
-                          ),
 
-                          //menu button
-                          // IconButton(
-                          //   onPressed: () {},
-                          //   icon: const Icon(Icons.menu),
-                          // ),
-                          SizedBox(
-                            height: 50,
-                            width: 50,
-                            child: Image.asset("assets/images/music2.gif"),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 20,),
-                      MyTextField(
-                        hintText: 'Enter a song',
-                        obscureText: false,
-                        labelText: 'Search',
-                        suffixIcon: const Icon(Icons.search),
-                        onChanged: (value) => runFilter(value),
-                      ),
-                    ],
+                            //title
+                            const Text(
+                              'MusicVerse',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 5,
+                              ),
+                            ),
+
+                            SizedBox(
+                              height: 50,
+                              width: 50,
+                              child: Image.asset("assets/images/music2.gif"),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        MyTextField(
+                          hintText: 'Enter a song',
+                          obscureText: false,
+                          labelText: 'Search',
+                          suffixIcon: const Icon(Icons.search),
+                          onChanged: (value) => runFilter(value),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                const SizedBox(height: 20),
-                Expanded(
-                  child: ListView.builder(
+                  const SizedBox(height: 20),
+                  Expanded(
+                    child: ListView.builder(
                       itemCount: playlist.length,
                       itemBuilder: (context, index) {
                         final Song song = playlist[index];
@@ -133,12 +130,14 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                             ),
                           ),
                         );
-                      }),
-                ),
-              ],
+                      },
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
-        }),
+        },
       ),
     );
   }
