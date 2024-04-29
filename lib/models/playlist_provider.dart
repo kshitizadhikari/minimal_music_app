@@ -10,59 +10,6 @@ class PlaylistProvider extends ChangeNotifier {
   final FireStoreService fireStoreService = FireStoreService();
   late List<Song> _playlist = [];
 
-  Future<void> loadSongs(String userId) async {
-    final _audioQuery = OnAudioQuery();
-    final List<SongModel> songModels = await _audioQuery.querySongs();
-    // Clear the existing songs list
-    _playlist.clear();
-
-    // Iterate over each SongModel and create a new Song object
-    songModels.forEach((songModel) async {
-      final song = Song(
-        id: songModel.id,
-        songName: songModel.title ?? "",
-        artistName: songModel.artist ?? "",
-        albumArtImagePath:
-            "assets/images/a_rocket_to_the_moon.jpg", // Set album art path accordingly
-        audioPath: songModel.data ?? "", // choose the correct audio path
-        isFavourite: false, // Set default value for isFavourite
-      );
-
-      // Add the song to the songs list
-      _playlist.add(song);
-    });
-    playlist = _playlist;
-    notifyListeners();
-  }
-
-  Future<List<Song>> loadFavoriteSongs(String userId) async {
-    final _audioQuery = OnAudioQuery();
-    final List<SongModel> songModels = await _audioQuery.querySongs();
-    // Clear the existing songs list
-    _playlist.clear();
-    // Iterate over each SongModel and create a new Song object
-    for (var songModel in songModels) {
-      final song = Song(
-        id: songModel.id,
-        songName: songModel.title ?? "",
-        artistName: songModel.artist ?? "",
-        albumArtImagePath:
-        "assets/images/a_rocket_to_the_moon.jpg", // Set album art path accordingly
-        audioPath: songModel.data ?? "", // choose the correct audio path
-        isFavourite: false, // Set default value for isFavourite
-      );
-
-      // Check if the song is a favorite
-      if (await fireStoreService.checkIfFavourite(songModel.id, userId)) {
-        _playlist.add(song);
-      }
-    }
-    playlist = _playlist;
-    notifyListeners();
-    return _playlist;
-  }
-
-
   Random random = Random();
   //current song playing index
   int? _currentSongIndex;
@@ -95,6 +42,67 @@ class PlaylistProvider extends ChangeNotifier {
 
   // initially not shuffled
   bool _isLoopOn = false;
+
+  Future<void> loadSongs(String userId) async {
+    final _audioQuery = OnAudioQuery();
+    final List<SongModel> songModels = await _audioQuery.querySongs();
+    // Clear the existing songs list
+    _playlist.clear();
+
+    // Iterate over each SongModel and create a new Song object
+    songModels.forEach((songModel) async {
+      final song = Song(
+        id: songModel.id,
+        songName: songModel.title ?? "",
+        artistName: songModel.artist ?? "",
+        albumArtImagePath:
+            "assets/images/a_rocket_to_the_moon.jpg", // Set album art path accordingly
+        audioPath: songModel.data ?? "", // choose the correct audio path
+        isFavourite: false, // Set default value for isFavourite
+      );
+
+      // Add the song to the songs list
+      _playlist.add(song);
+    });
+    playlist = _playlist;
+    notifyListeners();
+  }
+
+  Future<List<Song>> loadFavoriteSongs(String userId, String searchParam) async {
+    final _audioQuery = OnAudioQuery();
+    final List<SongModel> songModels = await _audioQuery.querySongs();
+
+    // Clear the existing songs list
+    _playlist.clear();
+
+    // Iterate over each SongModel and create a new Song object
+    for (var songModel in songModels) {
+      final song = Song(
+        id: songModel.id,
+        songName: songModel.title ?? "",
+        artistName: songModel.artist ?? "",
+        albumArtImagePath: "assets/images/a_rocket_to_the_moon.jpg",
+        audioPath: songModel.data ?? "",
+        isFavourite: false, // Set default value for isFavourite
+      );
+
+      // Check if the song is a favorite
+      if (await fireStoreService.checkIfFavourite(songModel.id, userId)) {
+        _playlist.add(song);
+      }
+    }
+
+    // Apply search filtering if searchParam is provided
+    if (searchParam != "") {
+     List<Song>searchResult = searchSong(searchParam);
+     playlist = searchResult;
+    }
+
+    // Notify listeners and return the playlist
+    notifyListeners();
+    return playlist;
+  }
+
 
 // play the song
   void play() async {
@@ -206,7 +214,8 @@ class PlaylistProvider extends ChangeNotifier {
   }
 
   //search for a particular song
-  void searchSong(String song) {
+  List<Song> searchSong(String song) {
+
     // Convert the search query to lowercase for case-insensitive search
     final query = song.toLowerCase();
 
@@ -216,13 +225,14 @@ class PlaylistProvider extends ChangeNotifier {
             song.songName.toLowerCase().contains(query) ||
             song.artistName.toLowerCase().contains(query))
         .toList();
-
-    // for(var song in _playlist) {
-    //   print(song.songName);
-    // }
     // Notify listeners with the search result
-    _playlist = searchResult;
+
     notifyListeners();
+    return searchResult;
+  }
+
+  void clearPlaylist() {
+    _playlist.clear();
   }
 
   //check if a song is favourite or not

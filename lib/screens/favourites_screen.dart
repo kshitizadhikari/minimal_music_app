@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:minimal_music_app/components/my_textfield.dart';
@@ -20,12 +22,13 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   final user = FirebaseAuth.instance.currentUser!;
   late final PlaylistProvider playlistProvider;
   late Future<List<Song>> _favoriteSongsFuture;
+  Timer? _debounceTimer;
 
   @override
   void initState() {
     super.initState();
     playlistProvider = Provider.of<PlaylistProvider>(context, listen: false);
-    _favoriteSongsFuture = playlistProvider.loadFavoriteSongs(user.uid);
+    _favoriteSongsFuture = playlistProvider.loadFavoriteSongs(user.uid, "");
   }
 
   void gotoFavoriteSong(int index) {
@@ -40,7 +43,16 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
   }
 
   void runFilter(String value) {
-    playlistProvider.searchSong(value);
+    // Cancel the previous debounce timer
+    _debounceTimer?.cancel();
+
+    // Set a new debounce timer
+    _debounceTimer = Timer(const Duration(milliseconds: 500), () {
+      setState(() {
+        // Reload the favorite songs future with the filtered search parameter
+        _favoriteSongsFuture = playlistProvider.loadFavoriteSongs(user.uid, value);
+      });
+    });
   }
 
   @override
@@ -153,3 +165,4 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
     );
   }
 }
+
