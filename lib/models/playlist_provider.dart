@@ -43,7 +43,7 @@ class PlaylistProvider extends ChangeNotifier {
   // initially not shuffled
   bool _isLoopOn = false;
 
-  Future<void> loadSongs(String userId) async {
+  Future<void> loadSongs(String userId, String searchParam) async {
     final _audioQuery = OnAudioQuery();
     final List<SongModel> songModels = await _audioQuery.querySongs();
     // Clear the existing songs list
@@ -64,6 +64,13 @@ class PlaylistProvider extends ChangeNotifier {
       // Add the song to the songs list
       _playlist.add(song);
     });
+
+    // Apply search filtering if searchParam is provided
+    if (searchParam != "") {
+      List<Song>searchResult = searchSong(searchParam);
+      playlist = searchResult;
+    }
+
     playlist = _playlist;
     notifyListeners();
   }

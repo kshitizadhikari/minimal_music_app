@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:minimal_music_app/components/my_textfield.dart';
@@ -16,23 +18,21 @@ class PlaylistScreen extends StatefulWidget {
 
 class _PlaylistScreenState extends State<PlaylistScreen> {
   final user = FirebaseAuth.instance.currentUser!;
-
-  //get the playlist provider
-  late final dynamic playlistProvider;
+  late final PlaylistProvider playlistProvider;
+  Timer? _debounceTimer;
 
   @override
   void initState() {
     super.initState();
-    playlistProvider = Provider.of<PlaylistProvider>(context, listen: false);
+    // Initialize playlist provider
+    Provider.of<PlaylistProvider>(context, listen: false)
+        .loadSongs(user.uid, "");
   }
 
-  //goto a song
+  // Navigate to song screen
   void gotoSong(int index) {
-    //update current song index
-
-    playlistProvider.currentSongIndex = index;
-
-    //navigate to song page
+    Provider.of<PlaylistProvider>(context, listen: false).currentSongIndex =
+        index;
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -41,13 +41,17 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
     );
   }
 
-  //search a song
-  void runFilter(String value) async {
-    // Check if playlistProvider is initialized
-    if (playlistProvider != null) {
-      // Call the searchSong method with the provided value
-      await playlistProvider.searchSong(value);
-    }
+  // Search songs
+  void runFilter(String value) {
+    // Cancel the previous debounce timer
+    _debounceTimer?.cancel();
+
+    // Set a new debounce timer
+    _debounceTimer = Timer(const Duration(milliseconds: 500), () {
+      // Reload the songs with the filtered search parameter
+      Provider.of<PlaylistProvider>(context, listen: false)
+          .loadSongs(user.uid, value);
+    });
   }
 
   @override
@@ -55,11 +59,9 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
     return SafeArea(
       child: Consumer<PlaylistProvider>(
         builder: (context, playlistProviderModel, child) {
-          playlistProviderModel.loadSongs(user.uid);
           var playlist = playlistProviderModel.playlist;
           return Scaffold(
             backgroundColor: Theme.of(context).colorScheme.background,
-            // return the list view UI
             body: Padding(
               padding: const EdgeInsets.symmetric(vertical: 25),
               child: Column(
@@ -71,7 +73,6 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            //back button
                             IconButton(
                               onPressed: () {
                                 Navigator.pop(context);
@@ -79,8 +80,6 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                               icon:
                                   const Icon(Icons.arrow_back_ios_new_outlined),
                             ),
-
-                            //title
                             const Text(
                               'MusicVerse',
                               style: TextStyle(
@@ -89,7 +88,6 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                                 letterSpacing: 5,
                               ),
                             ),
-
                             SizedBox(
                               height: 50,
                               width: 50,
@@ -124,8 +122,9 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                               title: Text(song.songName),
                               subtitle: Text(song.artistName),
                               leading: ClipRRect(
-                                  borderRadius: BorderRadius.circular(5),
-                                  child: Image.asset(song.albumArtImagePath)),
+                                borderRadius: BorderRadius.circular(5),
+                                child: Image.asset(song.albumArtImagePath),
+                              ),
                               onTap: () => gotoSong(index),
                             ),
                           ),
