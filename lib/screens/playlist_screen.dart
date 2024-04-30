@@ -10,7 +10,7 @@ import 'package:minimal_music_app/screens/song_screen.dart';
 import 'package:provider/provider.dart';
 
 class PlaylistScreen extends StatefulWidget {
-  PlaylistScreen({super.key});
+  const PlaylistScreen({super.key});
 
   @override
   State<PlaylistScreen> createState() => _PlaylistScreenState();
@@ -25,13 +25,13 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
   void initState() {
     super.initState();
     // Initialize playlist provider
-    Provider.of<PlaylistProvider>(context, listen: false)
-        .loadSongs(user.uid, "");
+    playlistProvider = Provider.of<PlaylistProvider>(context, listen: false);
+        playlistProvider.loadSongs(user.uid, "");
   }
 
   // Navigate to song screen
   void gotoSong(int index) {
-    Provider.of<PlaylistProvider>(context, listen: false).currentSongIndex =
+    playlistProvider.currentSongIndex =
         index;
     Navigator.push(
       context,
@@ -49,8 +49,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
     // Set a new debounce timer
     _debounceTimer = Timer(const Duration(milliseconds: 500), () {
       // Reload the songs with the filtered search parameter
-      Provider.of<PlaylistProvider>(context, listen: false)
-          .loadSongs(user.uid, value);
+      playlistProvider.loadSongs(user.uid, value);
     });
   }
 
@@ -83,9 +82,17 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                             const Text(
                               'MusicVerse',
                               style: TextStyle(
-                                fontSize: 20,
                                 fontWeight: FontWeight.bold,
+                                fontSize: 23,
                                 letterSpacing: 5,
+                                shadows: [
+                                  Shadow(
+                                    blurRadius: 10.0, // shadow blur
+                                    color: Colors.orange, // shadow color
+                                    offset: Offset(4.0,
+                                        4.0), // how much shadow will be shown
+                                  ),
+                                ],
                               ),
                             ),
                             SizedBox(
@@ -102,7 +109,10 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                           hintText: 'Enter a song',
                           obscureText: false,
                           labelText: 'Search',
-                          suffixIcon: const Icon(Icons.search),
+                          suffixIcon: IconButton(
+                            onPressed: () {},
+                            icon: Icon(Icons.search, color: Theme.of(context).colorScheme.primary,),
+                          ),
                           onChanged: (value) => runFilter(value),
                         ),
                       ],
@@ -120,7 +130,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                           child: NeuBox(
                             child: ListTile(
                               title: Text(song.songName),
-                              subtitle: Text(song.artistName),
+                              // subtitle: Text(song.artistName),
                               leading: ClipRRect(
                                 borderRadius: BorderRadius.circular(5),
                                 child: Image.asset(song.albumArtImagePath),

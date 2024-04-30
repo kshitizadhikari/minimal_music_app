@@ -66,7 +66,22 @@ class _SongScreenState extends State<SongScreen> {
                               ),
 
                               //title
-                              const Text('S O N G  P A G E'),
+                              const Text(
+                                'SONG  PAGE',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                  letterSpacing: 5,
+                                  shadows: [
+                                    Shadow(
+                                      blurRadius: 10.0, // shadow blur
+                                      color: Colors.green, // shadow color
+                                      offset: Offset(4.0,
+                                          4.0), // how much shadow will be shown
+                                    ),
+                                  ],
+                                ),
+                              ),
 
                               SizedBox(
                                 height: 50,
@@ -94,18 +109,23 @@ class _SongScreenState extends State<SongScreen> {
                                   children: [
                                     //song and artist name
                                     Padding(
-                                      padding: const EdgeInsets.all(8.0),
+                                      padding: const EdgeInsets.only(
+                                          left: 15, top: 20, bottom: 15),
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            currentSong.songName,
+                                            currentSong.songName.length > 35
+                                                ? currentSong.songName
+                                                    .substring(0, 35)
+                                                : currentSong.songName,
                                             style: const TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 15),
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15,
+                                            ),
                                           ),
-                                          Text(currentSong.artistName),
+                                          // Text(currentSong.artistName),
                                         ],
                                       ),
                                     ),
@@ -196,7 +216,7 @@ class _SongScreenState extends State<SongScreen> {
                               Expanded(
                                 child: GestureDetector(
                                   onTap: value.playPrevious,
-                                  child: NeuBox(
+                                  child: const NeuBox(
                                     child: Icon(Icons.skip_previous),
                                   ),
                                 ),
@@ -225,7 +245,7 @@ class _SongScreenState extends State<SongScreen> {
                               Expanded(
                                 child: GestureDetector(
                                   onTap: value.playNext,
-                                  child: NeuBox(
+                                  child: const NeuBox(
                                     child: Icon(Icons.skip_next),
                                   ),
                                 ),

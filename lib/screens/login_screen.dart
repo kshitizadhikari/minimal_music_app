@@ -12,7 +12,7 @@ import '../themes/theme_provider.dart';
 
 class LoginScreen extends StatefulWidget {
   final Function()? onTap;
-  LoginScreen({super.key, this.onTap});
+  const LoginScreen({super.key, this.onTap});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -108,7 +108,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   obscureText: false,
                   hintText: "Enter Email",
                   labelText: "Email",
-                  suffixIcon: const Icon(null),
+                  suffixIcon: IconButton(
+                    onPressed: () {},
+                    icon: Icon(Icons.email_outlined, color: Theme.of(context).colorScheme.primary,),
+                  ),
 
                 ),
 
@@ -119,7 +122,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   obscureText: true,
                   hintText: "Enter Password",
                   labelText: "Password",
-                  suffixIcon: Icon(null),
+                  suffixIcon: IconButton(
+                    onPressed: () {},
+                    icon: Icon(Icons.password, color: Theme.of(context).colorScheme.primary,),
+                  ),
                 ),
 
                 const SizedBox(height: 25),

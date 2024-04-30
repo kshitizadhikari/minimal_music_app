@@ -6,7 +6,7 @@ class MyTextField extends StatelessWidget {
   final String hintText;
   final bool obscureText;
   final String labelText;
-  final Icon suffixIcon;
+  final IconButton suffixIcon;
   final Function(String)? onChanged;
 
   const MyTextField({

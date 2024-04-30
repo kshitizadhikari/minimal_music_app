@@ -10,18 +10,18 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("S E T T I N G S"),
+        title: const Text("S E T T I N G S"),
       ),
       body: Container(
         decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.secondary,
             borderRadius: BorderRadius.circular(10)),
-        padding: EdgeInsets.all(20),
-        margin: EdgeInsets.all(25),
+        padding: const EdgeInsets.all(20),
+        margin: const EdgeInsets.all(25),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
+            const Text(
               'Dark Mode',
               style: TextStyle(fontSize: 18),
             ),

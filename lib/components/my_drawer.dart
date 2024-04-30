@@ -17,6 +17,14 @@ class MyDrawer extends StatelessWidget {
               child: Icon(Icons.music_note_outlined,
               size: 50,
               color: Theme.of(context).colorScheme.inversePrimary,
+                shadows: const [
+                   Shadow(
+                    blurRadius: 10.0, // shadow blur
+                    color: Colors.red, // shadow color
+                    offset: Offset(4.0,
+                        4.0), // how much shadow will be shown
+                  ),
+                ],
               ),
             ),
           ),
@@ -46,7 +54,7 @@ class MyDrawer extends StatelessWidget {
                 //go to settings page
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => SettingsScreen()),
+                  MaterialPageRoute(builder: (context) => const SettingsScreen()),
                 );
               },
             ),

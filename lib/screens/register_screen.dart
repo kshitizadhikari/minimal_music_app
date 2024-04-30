@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:minimal_music_app/components/my_textfield.dart';
 import 'package:minimal_music_app/components/my_button.dart';
 import 'package:minimal_music_app/components/neu_box.dart';
@@ -12,7 +11,7 @@ import '../themes/theme_provider.dart';
 
 class RegisterScreen extends StatefulWidget {
   final Function()? onTap;
-  RegisterScreen({super.key, this.onTap});
+  const RegisterScreen({super.key, this.onTap});
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
@@ -110,7 +109,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   obscureText: false,
                   hintText: "Enter Email",
                   labelText: "Email",
-                  suffixIcon: Icon(null),
+                  suffixIcon: IconButton(
+                    onPressed: () {},
+                    icon: Icon(Icons.email_outlined, color: Theme.of(context).colorScheme.primary,),
+                  ),
 
                 ),
 
@@ -122,7 +124,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   obscureText: true,
                   hintText: "Enter Password",
                   labelText: "Password",
-                  suffixIcon: Icon(null),
+                  suffixIcon: IconButton(
+                    onPressed: () {},
+                    icon: Icon(Icons.password, color: Theme.of(context).colorScheme.primary,),
+                  ),
 
                 ),
 
@@ -134,7 +139,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   obscureText: true,
                   hintText: "Enter Confirm Password",
                   labelText: "Confirm Password",
-                  suffixIcon: Icon(null),
+                  suffixIcon: IconButton(
+                    onPressed: () {},
+                    icon: Icon(Icons.password, color: Theme.of(context).colorScheme.primary,),
+                  ),
 
                 ),
 
@@ -188,14 +196,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
+                    const Text(
                       "Already have an accont?  ",
                       style: TextStyle(color: Colors.grey),
                     ),
-                    SizedBox(width: 5),
+                    const SizedBox(width: 5),
                     GestureDetector(
                       onTap: widget.onTap,
-                      child: Text(
+                      child: const Text(
                         "Login",
                         style: TextStyle(color: Colors.blue),
                       ),
