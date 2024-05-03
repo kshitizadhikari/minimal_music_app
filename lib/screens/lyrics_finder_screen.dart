@@ -111,7 +111,7 @@ class _LyricsFinderScreenState extends State<LyricsFinder> {
                       labelText: 'Song',
                         suffixIcon: IconButton(
                           onPressed: () {
-                            _artistController.clear();
+                            _songController.clear();
                           },
                           icon: const Icon(Icons.clear),
                         ),
@@ -141,7 +141,9 @@ class _LyricsFinderScreenState extends State<LyricsFinder> {
                       if (snapshot.connectionState == ConnectionState.done) {
                         if (snapshot.hasError) {
                           return Center(
-                            child: Text('Error: ${snapshot.error}'),
+                            child: Text('Error: ${snapshot.error}', style: TextStyle(
+                              fontSize: 24
+                            ),),
                           );
                         }
                         var data = snapshot.data;

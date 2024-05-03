@@ -124,7 +124,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   labelText: "Password",
                   suffixIcon: IconButton(
                     onPressed: () {},
-                    icon: Icon(Icons.password, color: Theme.of(context).colorScheme.primary,),
+                    icon: Icon(Icons.lock_outline, color: Theme.of(context).colorScheme.primary,),
                   ),
                 ),
 
